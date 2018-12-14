@@ -20,6 +20,13 @@ export interface Node {
   members:          any;
 }
 
+export interface PostResponse {
+  'ok': string;
+  'key': string;
+  'value': string;
+  'error'?: string;
+}
+
 export interface NodeStatusResponse {
   'ok': string;
   'status': Node;

@@ -13,8 +13,16 @@
   <div class="cluster card text-center" *ngFor="let cluster of clusterDict | keyvalue:sortedNames">
     <div class="card-header">
       <nav class="navbar navbar-light bg-light justify-content-between">
-        <span class="navbar-brand">{{cluster.value.name}}</span>
-        <span class="btn btn-outline-danger btn-sm" (click)="deleteCluster(cluster.key)"> <i class="material-icons">delete</i></span>
+        <span class="navbar-brand">{{cluster.value.name}}&nbsp;<span class="btn btn-outline-danger btn-sm" (click)="deleteCluster(cluster.key)"> <i class="material-icons">delete</i></span></span>
+      <!--
+        <form class="form-inline my-2 my-lg-0" #requestForm="ngForm">
+          <div class="input-group-prepend">
+            <input type="text" #theKey class="form-control mr-sm-2" placeholder="key" name="theKey" ngModel>
+            <input type="text" #theValue class="form-control mr-sm-2" placeholder="value" name="theValue" ngModel>
+            <button class="btn btn-outline-primary my-2 my-sm-0" (click)="sendRequest(cluster.value.name, theKey.value, theValue.value)">send</button>
+          </div>
+        </form>
+      -->
       </nav>
     </div>
 

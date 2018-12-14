@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { Component } from '@angular/core';
-import { Cluster, Node, NodeStatusResponse} from './app.objects'
+import { Cluster, Node, NodeStatusResponse, PostResponse } from './app.objects'
 import { DistRaftService } from './app.service';
 
 /* Example Node:
@@ -101,7 +101,22 @@ export class AppComponent {
 
     }
 
-  private getNodeStatusFromMembers(clsuter_name, node_resp) {
+  sendRequest(c_name: string, key: string, value: string) {
+    if (this.clusterDict[c_name]) {
+      var node = this.clusterDict[c_name].nodes[0]
+      this.distraftService.sendCommand(this.getMemberUrl(node), key, value).subscribe(resp => this.parseSendRequestResponse(resp));
+    }
+    
+  }
+
+  private parseSendRequestResponse(response: PostResponse) {
+    if(response['ok']!=='success') {
+      var reason = response["error"];
+      alert(`Could not send request, reason: ${reason}.`);
+    }
+  }
+
+  private getNodeStatusFromMembers(cluster_name, node_resp) {
     let resp: NodeStatusResponse = node_resp;
     if (resp.status) {
       var members = [];
@@ -113,7 +128,7 @@ export class AppComponent {
 
       // get all memebr's statuses!
       for (let m of members) {
-        this.distraftService.getNodeStatus(m.id, m.url).subscribe((resp) => this.updateNodeStatus(clsuter_name, resp));
+        this.distraftService.getNodeStatus(m.id, m.url).subscribe((resp) => this.updateNodeStatus(cluster_name, resp));
       }
     }
   }
