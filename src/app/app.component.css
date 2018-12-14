@@ -1,0 +1,11 @@
+/*Google fonts*/
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+.container, .container-fluid {
+    padding-top: 65px;
+}
+
+.cluster {
+    margin-top: 12px;
+    margin-bottom: 13px;
+}

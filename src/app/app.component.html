@@ -1,0 +1,57 @@
+<nav class="navbar fixed-top navbar-dark bg-dark">
+  <form class="form-inline my-2 my-lg-0" #clusterForm="ngForm">
+    <div class="input-group-prepend">
+      <input type="text" #clusterName class="form-control mr-sm-2" placeholder="distraft cluster name" name="clusterName" ngModel>
+      <input type="text" #clusterMember class="form-control mr-sm-2" placeholder="first member url" name="clusterMember" ngModel>
+      <button class="btn btn-outline-success my-2 my-sm-0" (click)="addCluster(clusterName.value, clusterMember.value)">add</button>
+    </div>
+  </form>
+</nav>
+
+<div class="container-fluid">
+
+  <div class="cluster card text-center" *ngFor="let cluster of clusterDict | keyvalue:sortedNames">
+    <div class="card-header">
+      <nav class="navbar navbar-light bg-light justify-content-between">
+        <span class="navbar-brand">{{cluster.value.name}}</span>
+        <span class="btn btn-outline-danger btn-sm" (click)="deleteCluster(cluster.key)"> <i class="material-icons">delete</i></span>
+      </nav>
+    </div>
+
+    <div class="card-body">
+      <div class="card-columns">
+        <div class="card text-left text-white" [ngClass]="(n.up)?'bg-success':'bg-secondary'" *ngFor="let n of cluster.value.nodes">
+          <h5 class="card-header">{{n.id}}: <em>{{n.state}}</em></h5>
+          <div class="card-body">
+              <ul class="card-text">
+                <li>Who's my leader: <strong>{{n.leader}}</strong></li>
+                <li>Term: <strong>{{n.term}}</strong></li>
+                <li>Commit index: <strong>{{n.commit_index}}</strong></li>
+                <li>Last Applied: <strong>{{n.last_applied}}</strong></li>
+                <li>Last Log Index: <strong>{{n.last_log_index}}</strong></li>
+                <li>Last Log Term: <strong>{{n.last_log_term}}</strong></li>
+                <li>Peer Address: <strong>udp://{{n.members[n.id][0]}}:{{n.members[n.id][1]}}</strong></li>
+                <li>Client Address: <strong>http://{{n.members[n.id][2]}}:{{n.members[n.id][3]}}</strong></li>
+                <li *ngIf="n.is_leader">Match/Next Index:
+                  <ul>
+                    <li *ngFor="let mi of n.match_index | keyvalue:sortedNames"><em>{{mi.key}}:</em>
+                      <ul>
+                        <li>match: <strong>{{mi.value}}</strong></li>
+                        <li>next: <strong>{{n.next_index[mi.key]}}</strong></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+          </div>
+          <div class="card-footer">
+            <nav class="navbar justify-content-between">
+              <span>Status: <strong>{{(n.up)?'up':'down'}}</strong></span>
+              <button class="btn text-white" (click)="changeNodeState(n, (n.up)?'stop':'start')" [ngClass]="(n.up)?'btn-dark':'bg-success'">{{(n.up)?'stop':'start'}}</button>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
